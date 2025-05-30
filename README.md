@@ -5,7 +5,7 @@ DeerCam is a field-deployable system for automated infrared thermography of wild
 
 
 ## Description
-DDeerCam is designed to function similarly to a camera trap. When an animal passes in front of the system, a passive infrared (PIR) motion sensor connected to the Raspberry Pi triggers a relay that supplies power to the thermal camera. Once powered on and connected to the Raspberry Pi, the camera begins capturing images at user-defined intervals for a user-specified duration. After this period, the system checks for continued motion. If no motion is detected, the camera is powered off. To operate the DeerCam System autonomously in the field, the researcher must provide a 12V power supply and a waterproof housing for the Raspberry Pi, PIR sensor, and thermal camera.
+DeerCam is designed to function similarly to a camera trap. When an animal passes in front of the system, a passive infrared (PIR) motion sensor connected to the Raspberry Pi triggers a relay that supplies power to the thermal camera. Once powered on and connected to the Raspberry Pi, the camera begins capturing images at user-defined intervals for a user-specified duration. After this period, the system checks for continued motion. If no motion is detected, the camera is powered off. To operate the DeerCam System autonomously in the field, the researcher must provide a 12V power supply and a waterproof housing for the Raspberry Pi, PIR sensor, and thermal camera.
 
 ![deercam_1](images/DeerCam_1.png)
 ![deercam_2](images/DeerCam_2.png)
@@ -14,4 +14,15 @@ DDeerCam is designed to function similarly to a camera trap. When an animal pass
 ## Getting Started
 
 ### Hardware
+
+- Power:
+    - **12V power supply.** In the field, we use a car battery to power the system, but any reliable 12V power source will work.
+    - **DC to DC Converter.** To power the Raspberry Pi from the 12V supply, we use a DC-to-DC converter by Klunoxj, which accepts 12V or 24V input and outputs 5V at 5A via a USB-C connector.
+    - **2-pin screw terminal connector and wiring.** The FLIR A325sc camera is powered by connecting wires fitted to a compatible 2-pin screw terminal connector, which then connects directly to the 12 V power supply.
+
+- Camera Supplies:
+    - FLIR A325sc Camera
+    - Ethernet cable (to connect to the Raspberry Pi)
+- Raspberry Pi 5 
+- 
 
