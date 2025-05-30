@@ -16,9 +16,9 @@ DeerCam is designed to function similarly to a camera trap. When an animal passe
 ### Hardware
 
 - Power:
-    - **12V power supply.** In the field, we use a car battery to power the system, but any reliable 12V power source will work.
-    - **DC to DC Converter.** To power the Raspberry Pi from the 12V supply, we use a DC-to-DC converter by Klunoxj, which accepts 12V or 24V input and outputs 5V at 5A via a USB-C connector.
-    - **2-pin screw terminal connector and wiring.** The FLIR A325sc camera is powered by connecting wires fitted to a compatible 2-pin screw terminal connector, which then connects directly to the 12 V power supply.
+    - **<u>12V power supply.</u>** In the field, we use a car battery to power the system, but any reliable 12V power source will work.
+    - **<u>DC to DC Converter.</u>** To power the Raspberry Pi from the 12V supply, we use a DC-to-DC converter by Klunoxj, which accepts 12V or 24V input and outputs 5V at 5A via a USB-C connector.
+    - **<u>2-pin screw terminal connector and wiring.</u>** The FLIR A325sc camera is powered by connecting wires fitted to a compatible 2-pin screw terminal connector, which then connects directly to the 12 V power supply.
 
 - Camera Supplies:
     - FLIR A325sc Camera
