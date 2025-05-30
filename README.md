@@ -1,6 +1,9 @@
 # Deer_Cam
 DeerCam is a field-deployable system for automated infrared thermography of wildlife, designed to function like a camera trap. This repository contains all code and documentation needed to build and operate DeerCam—a Raspberry Pi–based platform that captures thermal images using a FLIR A325sc camera via the FLIR Spinnaker SDK. The README includes detailed instructions for assembling the system, configuring hardware, and processing the resulting thermal imagery.
 
+For questions regarding the DeerCam system, please contact the developer, Rhemi Toth, at [rhemitoth@g.harvard.edu](mailto:rhemitoth@g.harvard.edu).
+
+
 ![thermal_images](images/deer.png)
 
 
@@ -42,33 +45,88 @@ DeerCam is designed to function similarly to a camera trap. When an animal passe
 
 ### Assembly
 
-The DeerCam System is composed of four "layers" which are shown below from bottom to top:
+The DeerCam System is composed of four primary "layers," listed below from bottom to top:
 
-#### **Layer 1:** The Raspberry Pi
+#### **Layer 1: Raspberry Pi**
 
 ![raspi](images/raspberry_pi.png)
 
-#### **Layer 2:** The Relay
+#### **Layer 2: Relay**
 
-In the DeerCam System, the positive wire from the battery to the camera is routed through the relay switch.
+In the DeerCam System, the positive wire connecting the battery to the camera is routed through a relay switch to allow the Raspberry Pi to control camera power.
 
-![relay1](images/relay_1.png)
+![relay1](images/relay_1.png)  
 ![relay2](images/relay_2.png)
 
+#### **Layer 3: Prototyping HAT**
 
-#### **Layer 3:** The Prototyping HAT
+The RTC module and PIR sensor wiring are soldered directly onto the prototyping HAT. The e-paper display (Layer 4) connects to the HAT by attaching directly to its GPIO pins.
 
-THE RTC module and wiring for the PIR sensor are soldered directily to the prototyping HAT. The e-paper display (Layer 4) connects to the Prototypinng hat by attactching to directly to the HAT's GPIO pins 
-
-![pb1](images/protoboard_1.png)
+![pb1](images/protoboard_1.png)  
 ![pb2](images/protoboard_2.png)
 
+#### **Layer 4: e-Paper Display**
 
-#### **Layer 5:** The e-Paper Dispaly
-
-![hat1](images/ehat_1.png)
+![hat1](images/ehat_1.png)  
 ![hat2](images/ehat_2.png)
 
+### Automatically Running DeerCam on Startup
 
-- 
+To ensure the DeerCam system starts automatically when the Raspberry Pi powers on, we use a `systemd` service called `run_on_startup.service`.
 
+### The Startup Script
+
+This service runs the `run_on_startup.sh` script, which:
+
+- Initializes the Conda environment (`flir.env`)
+- Launches the FLIR camera controller script
+- Logs output to a file for debugging
+
+Here’s what the `run_on_startup.sh` script looks like:
+
+```bash
+#!/bin/bash
+
+# Load conda
+source /home/moorcroftlab/miniforge3/etc/profile.d/conda.sh
+
+# Activate the environment
+conda activate /home/moorcroftlab/miniforge3/envs/flir.env
+
+# Run the Python script and log output
+python /home/moorcroftlab/Documents/FLIR/FLIR_A325sc_Controller/FLIR_A325sc_Controller_Complete.py > /home/moorcroftlab/Documents/FLIR/FLIR_A325sc_Controller/run_on_startup.log 2>&1
+```
+
+#### Setting Up the Startup Service
+
+If you're setting this up on a new device, follow these steps:
+
+1. Create the service file
+Save the following content to `/etc/systemd/system/run_on_startup.service`:
+
+```ini
+[Unit]
+Description=Run DeerCam at startup
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/USERNAME/path/to/run_on_startup.sh
+User=USERNAME
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+2. Make the script executable
+```bash
+chmod +x /home/USERNAME/path/to/run_on_startup.sh
+```
+
+3. Enable and start the service
+```bash
+sudo systemctl enable run_on_startup.service
+sudo systemctl start run_on_startup.service
+```
+```
