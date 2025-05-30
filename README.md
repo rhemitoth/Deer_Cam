@@ -104,7 +104,7 @@ conda activate /home/moorcroftlab/miniforge3/envs/flir.env
 python /home/moorcroftlab/Documents/FLIR/FLIR_A325sc_Controller/FLIR_A325sc_Controller_Complete.py > /home/moorcroftlab/Documents/FLIR/FLIR_A325sc_Controller/run_on_startup.log 2>&1
 ```
 
-Descriptions for all of the modules required to run DeerCam can be found in the modules section of `FLIR_A325sc_Controller_Complete.py`. All of these modules should be imported into your conda environment before attempting the run the DeerCam System.
+Descriptions for all of the modules required to run DeerCam can be found in the modules section of `FLIR_A325sc_Controller_Complete.py`. All of these modules should be imported into your conda environment before attempting to run the DeerCam System.
 
 #### Setting Up the Startup Service
 
@@ -145,7 +145,7 @@ In addition to implementing a `systemd` service to run DeerCam at startup, we al
 
 ## Processing the Data
 
-Extracting animal surface temperature from raw FLIR data involves a three-step workflow. First, as with any camera trap dataset, images containing animals of interest must be identified. Once relevant images are selected, animal pixels must be separated from the background. Finally, the raw FLIR data—recorded as sensor energy—must be converted into surface temperature.
+Extracting animal surface temperature from raw FLIR data involves a three-step workflow. First, as with any camera trap dataset, images containing animals of interest must be identified. Once relevant images are selected, animal pixels must be separated from the background. Finally, the raw FLIR data—recorded as incoming energy at the sensor—must be converted into surface temperature.
 
 ### **Step 1:** Filtering the Images
 
