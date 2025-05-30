@@ -9,7 +9,7 @@ DDeerCam is designed to function similarly to a camera trap. When an animal pass
 
 <p float="left">
   <img src="images/DeerCam_1.png" width="45%" />
-  <img src="images/DeerCam_2.png" width="25%" />
+  <img src="images/DeerCam_2.png" width="20%" />
 </p>
  
 
