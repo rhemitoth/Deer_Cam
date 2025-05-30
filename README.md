@@ -72,6 +72,11 @@ The RTC module and PIR sensor wiring are soldered directly onto the prototyping 
 ![hat1](images/ehat_1.png)  
 ![hat2](images/ehat_2.png)
 
+To connect DeerCam to power and connect the thermal camera to the RaspberryPi, please refer to the following diagram:
+
+![deercam_diagram](images/deercam_diagram.png)
+
+
 ### Automatically Running DeerCam on Startup
 
 To ensure the DeerCam system starts automatically when the Raspberry Pi powers on, we use a `systemd` service called `run_on_startup.service`.
