@@ -41,6 +41,8 @@ DeerCam is designed to function similarly to a camera trap. When an animal passe
     - **Camera housing and Germanium window.** To protect the thermal camera from environmental exposure, we modified a BOSCH UHO-POE-10 outdoor housing by replacing the front glass with a Germanium window. Since thermal radiation cannot pass through glass, it’s essential that the housing window is made from a material like Germanium that transmits infrared radiation.
     - **Raspberry Pi housing.** The Raspberry Pi is enclosed in an IP67-rated waterproof electrical junction box to shield it from moisture and dust in the field.
     - **PIR sensor housing.** The PIR sensor and its wiring are enclosed in a waterproof plastic box. We modified the box by cutting a hole to match the diameter of the PIR sensor's globe and sealed it with waterproof sealant to ensure durability in outdoor conditions.
+    - **Weather Station.** This is a separate system that should be deployed alongside DeerCam. To estimate animal surface temperature from the raw FLIR data, it is essential to record environmental conditions—specifically air temperature, humidity, solar radiation, and longwave radiation—at the time each image is captured.
+
 
 
 ### Assembly
@@ -97,26 +99,29 @@ conda activate /home/moorcroftlab/miniforge3/envs/flir.env
 python /home/moorcroftlab/Documents/FLIR/FLIR_A325sc_Controller/FLIR_A325sc_Controller_Complete.py > /home/moorcroftlab/Documents/FLIR/FLIR_A325sc_Controller/run_on_startup.log 2>&1
 ```
 
+Descriptions for all of the modules required to run DeerCam can be found in the modules section of `FLIR_A325sc_Controller_Complete.py`. All of these modules should be imported into your conda environment before attempting the run the DeerCam System.
+
 #### Setting Up the Startup Service
 
 If you're setting this up on a new device, follow these steps:
 
 1. Create the service file
+
 Save the following content to `/etc/systemd/system/run_on_startup.service`:
 
 ```ini
-[Unit]
-Description=Run DeerCam at startup
-After=network.target
+[[Unit]
+Description=My Script Service
+After=graphical.target
 
 [Service]
 Type=simple
-ExecStart=/home/USERNAME/path/to/run_on_startup.sh
-User=USERNAME
+ExecStart=/usr/bin/lxterminal -e /home/moorcroftlab/Documents/FLIR/FLIR_A325sc_$
 Restart=always
+RestartSec=3
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 ```
 
 2. Make the script executable
@@ -129,4 +134,39 @@ chmod +x /home/USERNAME/path/to/run_on_startup.sh
 sudo systemctl enable run_on_startup.service
 sudo systemctl start run_on_startup.service
 ```
-```
+
+In addition to implementing a `systemd` service to run DeerCam at startup, we also programmed a cron job to reboot the Raspberry Pi every day at midnight to ensure system stability.
+
+
+## Processing the Data
+
+Extracting animal surface temperature from raw FLIR data involves a three-step workflow. First, as with any camera trap dataset, images containing animals of interest must be identified. Once relevant images are selected, animal pixels must be separated from the background. Finally, the raw FLIR data—recorded as sensor energy—must be converted into surface temperature.
+
+### **Step 1:** Filtering the Images
+
+DeerCam captures images whenever the PIR sensor is triggered, without distinguishing between animal species. To isolate images containing our target species (roe deer), we used a machine learning tool called [DeepFaune](https://www.deepfaune.cnrs.fr/en/), which automatically classifies images based on the animals they contain.
+
+### **Step 2:** Segmenting the Images
+
+After filtering, it is useful to extract the pixels corresponding to the animal from the background so that surface temperature can be accurately estimated (e.g., by computing the mean temperature of those pixels after conversion). 
+
+### **Step 3:** Calculating Surface Temperature
+
+FLIR cameras do not directly measure surface temperature. Instead, they record total incoming thermal radiation in units of analog-to-digital (A/D) counts. Following the methodology described in Appendix A of Johnston et al. (2021), one can convert raw FLIR data into surface temperature values.
+
+The Jupyter Notebook `Thermal_Image_Processing.ipynb` demonstrates how to perform Steps 2 and 3, that is extracting animal pixels from the background using a watershed segmentation technique and converting the raw FLIR data to units of surface temperature.
+
+![processed_image](images/processed_image.png)  
+
+
+## References
+
+Chamaille-Jammes, S., Miele, V., Dussert, G., Rossignol, C., Spataro, B., & DeepFaune Team. (2022). *DeepFaune software* [Computer software]. https://plmlab.math.cnrs.fr/deepfaune/software/
+
+Johnston, M. R., Andreu, A., Verfaillie, J., Baldocchi, D., González-Dugo, M. P., & Moorcroft, P. R. (2021). Measuring surface temperatures in a woodland savanna: Opportunities and challenges of thermal imaging in an open-canopy ecosystem. *Agricultural and Forest Meteorology, 310*, 108484. https://doi.org/10.1016/j.agrformet.2021.108484
+
+
+
+
+
+
