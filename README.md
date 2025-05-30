@@ -16,13 +16,59 @@ DeerCam is designed to function similarly to a camera trap. When an animal passe
 ### Hardware
 
 - Power:
-    - **<u>12V power supply.</u>** In the field, we use a car battery to power the system, but any reliable 12V power source will work.
-    - **<u>DC to DC Converter.</u>** To power the Raspberry Pi from the 12V supply, we use a DC-to-DC converter by Klunoxj, which accepts 12V or 24V input and outputs 5V at 5A via a USB-C connector.
-    - **<u>2-pin screw terminal connector and wiring.</u>** The FLIR A325sc camera is powered by connecting wires fitted to a compatible 2-pin screw terminal connector, which then connects directly to the 12 V power supply.
+    - **12V power supply.** In the field, we use a car battery to power the system, but any reliable 12V power source will work.
+    - **DC to DC Converter.** To power the Raspberry Pi from the 12V supply, we use a DC-to-DC converter by Klunoxj, which accepts 12V or 24V input and outputs 5V at 5A via a USB-C connector.
+    - **2-pin screw terminal connector and wiring.** The FLIR A325sc camera is powered by connecting wires fitted to a compatible 2-pin screw terminal connector, which then connects directly to the 12 V power supply.
 
-- Camera Supplies:
-    - FLIR A325sc Camera
-    - Ethernet cable (to connect to the Raspberry Pi)
-- Raspberry Pi 5 
+- Camera Parts:
+    - **FLIR A3xx Camera.** The DeerCam system is designed for use with the FLIR A325sc, but other FLIR A3xx models may also be compatible. However, we have not tested compatibility with other models.
+    - **Ethernet cable.** FLIR A3xx series cameras transmit data via Gigabit Ethernet (GigE). In the DeerCam system, the Raspberry Pi also uses Telnet commands over the Ethernet connection to control the camera's autofocus.
+
+- Raspberry Pi Parts:
+    - **Raspberry Pi 5.** Currently, DeerCam must be run on a Raspberry Pi 5 and is not compatible with earlier models. Running DeerCam on an older Pi would require modifying some of the code (e.g., how the GPIO pins are configured).
+    - **USB SD card reader.** After retrieving images from the camera, DeerCam saves them to an SD card connected to the Raspberry Pi via a USB SD card reader.
+    - **PIR sensor and wiring.** To detect motion, DeerCam uses input from a PIR sensor connected to one of the GPIO pins.
+    - **Relay switch.** A relay switch controls power to the camera, ensuring the camera is only powered when needed. This design choice helps conserve battery life by preventing the camera from drawing power continuously when no animals are present.
+    - **DS3231 Real-Time Clock.** The Raspberry Pi normally retrieves time from the internet. For field deployments without connectivity, an RTC module is required so the device can maintain accurate time.
+    - **e-Paper display.** System status messages (e.g., "Connecting to camera", "Focusing camera", "Collecting images", "WARNING: No SD card") are shown on a 2.7-inch e-Paper Display HAT from Waveshare. Because it doesn't use backlighting, the e-Paper display is ideal for providing status updates without disturbing animals.
+    - **Prototyping HAT.** The PIR sensor, RTC module, and e-Paper display are connected via a prototyping HAT. DeerCam is designed to work with the Perma-Proto HAT from Adafruit.
+    - **Stacking headers and standoffs.** To physically attach the relay, prototyping HAT, and e-Paper display to the Raspberry Pi, stacking headers and standoffs are used.
+
+- Materials for Field Deployment:
+    - **Camera housing and Germanium window.** To protect the thermal camera from environmental exposure, we modified a BOSCH UHO-POE-10 outdoor housing by replacing the front glass with a Germanium window. Since thermal radiation cannot pass through glass, it’s essential that the housing window is made from a material like Germanium that transmits infrared radiation.
+    - **Raspberry Pi housing.** The Raspberry Pi is enclosed in an IP67-rated waterproof electrical junction box to shield it from moisture and dust in the field.
+    - **PIR sensor housing.** The PIR sensor and its wiring are enclosed in a waterproof plastic box. We modified the box by cutting a hole to match the diameter of the PIR sensor's globe and sealed it with waterproof sealant to ensure durability in outdoor conditions.
+
+
+### Assembly
+
+The DeerCam System is composed of four "layers" which are shown below from bottom to top:
+
+#### **Layer 1:** The Raspberry Pi
+
+![raspi](images/raspberry_pi.png)
+
+#### **Layer 2:** The Relay
+
+In the DeerCam System, the positive wire from the battery to the camera is routed through the relay switch.
+
+![relay1](images/relay_1.png)
+![relay2](images/relay_2.png)
+
+
+#### **Layer 3:** The Prototyping HAT
+
+THE RTC module and wiring for the PIR sensor are soldered directily to the prototyping HAT. The e-paper display (Layer 4) connects to the Prototypinng hat by attactching to directly to the HAT's GPIO pins 
+
+![pb1](images/protoboard_1.png)
+![pb2](images/protoboard_2.png)
+
+
+#### **Layer 5:** The e-Paper Dispaly
+
+![hat1](images/ehat_1.png)
+![hat2](images/ehat_2.png)
+
+
 - 
 
