@@ -43,7 +43,7 @@ import subprocess # used to check if SD card is connected
 # Argument 'burst' specifies whether a single image or a burst of images will be saved. The default is burst = True and is ideal for capturing images of free ranging animals.
 # Argument 'burst_num' specifies the number of images that are captured as a part of the burst. The default is 3. 
 
-def save_image_spinnaker(directory, filetype, burst = True, burst_num = 3):
+def save_image_spinnaker(directory, filetype, burst = False, burst_num = 3):
     # Argument 'directory' specifies directory where image will be saved
     # Argument 'filetype' specifies filetype of image to be saves ('png', 'jpg', 'tiff', etc)
     
@@ -65,7 +65,7 @@ def save_image_spinnaker(directory, filetype, burst = True, burst_num = 3):
             image_result = cam.GetNextImage()
         
             # Save image
-            filename = directory + 'file-' + str(datetime.datetime.now().strftime('%Y%m%d-%H%M%S')) + "." + filetype
+            filename = directory + 'file-' + str(datetime.utcnow.now().strftime('%Y%m%d-%H%M%S')) + "." + filetype
             if os.path.exists(directory):
                 image_result.Save(filename)
 
